@@ -60,7 +60,28 @@ class Display:
             fill=self.my_yellow
         )
 
-    def initialize(self):
+        self.p_wall = 0.15
+        self.p_white = 0.45
+        self.p_green = 0.1
+        self.p_blue = 0.1
+        self.p_red = 0.1
+
+    def draw_grid(self):
+        for i in range(self.nb_lines + 1):
+            ni = self.zoom * 20 * i + 20
+            self.Canvas.create_line(20, ni, self.width - 20, ni)
+        for j in range(self.nb_columns + 1):
+            nj = self.zoom * 20 * j + 20
+            self.Canvas.create_line(nj, 20, nj, self.height - 20)
+        self.color_draw(self.g)
+
+    def initialize(self, p_wall = 0.15, p_white = 0.45, p_green = 0.1, p_blue = 0.1, p_red = 0.1):
+        self.p_wall = p_wall
+        self.p_white = p_white
+        self.p_green = p_green
+        self.p_blue = p_blue
+        self.p_red = p_red
+
         self.pos_x = 20 + 10 * self.zoom
         self.pos_y = 20 + 10 * self.zoom
         for k in range(5):
@@ -82,27 +103,23 @@ class Display:
         self.weight[2] = 20
         self.weight[3] = 30
         self.weight[4] = 40
+        self.draw_grid()
 
     # specification des proportion de murs, case _whitehes et pts de couleur
     def color_draw(self, g):
-        p_wall = 0.15
-        p_white = 0.45
-        p_green = 0.0
-        p_blue = 0.2
-        p_red = 0.2
         # pnoire=0.1 mais pas besoin de le specifier c'est la couleur restante
         for i in range(self.nb_lines):
             for j in range(self.nb_columns):
                 z = np.random.uniform(0, 1)
-                if z < p_wall:
+                if z < self.p_wall:
                     c = -1
-                elif z < p_wall + p_white:
+                elif z < self.p_wall + self.p_white:
                     c = 0
-                elif z < p_wall + p_white + p_green:
+                elif z < self.p_wall + self.p_white + self.p_green:
                     c = 1
-                elif z < p_wall + p_white + p_green + p_blue:
+                elif z < self.p_wall + self.p_white + self.p_green + self.p_blue:
                     c = 2
-                elif z < p_wall + p_white + p_green + p_blue + p_red:
+                elif z < self.p_wall + self.p_white + self.p_green + self.p_blue + self.p_red:
                     c = 3
                 else:
                     c = 4
@@ -249,15 +266,6 @@ class Display:
         for k in range(5):
             global_cost += self.cost[k] * self.weight[k]
         self.w.config(text='Cost = ' + str(global_cost))
-
-    def draw_grid(self):
-        for i in range(self.nb_lines + 1):
-            ni = self.zoom * 20 * i + 20
-            self.Canvas.create_line(20, ni, self.width - 20, ni)
-        for j in range(self.nb_columns + 1):
-            nj = self.zoom * 20 * j + 20
-            self.Canvas.create_line(nj, 20, nj, self.height - 20)
-        self.color_draw(self.g)
     
     def run(self):
         self.draw_grid()
