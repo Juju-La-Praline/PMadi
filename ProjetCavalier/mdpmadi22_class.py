@@ -14,8 +14,7 @@ class Display:
        
 
         # Creation d'un widget Canvas (pour la grille)
-        print(type(self.env.nb_columns))
-        print(type(self.zoom))
+       
         self.width = self.zoom * 20 * self.env.nb_columns + 40
         self.height = self.zoom * 20 * self.env.nb_lines + 40
 
@@ -199,7 +198,7 @@ class Display:
                     if f"({li}, {cj})" in move.varName and move.x > 0:
                         self.next_move = move.varName
                 self.best_path.config(text='Next best move: ' + str(self.next_move))
-        print(posebase)
+        
         return changed, cost, posebase
 
 
@@ -213,7 +212,7 @@ class Display:
     # La variable alea =1 si on veut des effets aleatoires sinon les transitions sont deterministes
         # On ajoute un effet aleatoire dans les transitions
         if self.env.alea == 1 and changed == 1:
-            print("pasnormals")
+        
             t = np.random.uniform(0, 1)
             if t > 0.5:
                 d = np.random.randint(8)
@@ -233,11 +232,13 @@ class Display:
                 NewPosX = self.env.pos_x + self.zoom * 20 * dcj
                 newcj = int((NewPosX - 30) / (20 * self.zoom))
                 newli = int((NewPosY - 30) / (20 * self.zoom))
-                print('d', dli, dcj)
+                
                 if newli >= 0 and newcj >= 0 and newli <= self.env.nb_lines - \
                         1 and newcj <= self.env.nb_columns - 1 and self.env.g[newli, newcj] > -1:
                     self.env.pos_y = NewPosY
                     self.env.pos_x = NewPosX
+                    cost = np.zeros(6,dtype=np.int)
+                    cost[self.env.g[newli,newcj]]+=1 
         self.Canvas.create_line(posebase[0], posebase[1], self.env.pos_x , self.env.pos_y, arrow=tk.LAST)
     # on dessine le pion a sa nouvelle position
         self.Canvas.coords(
